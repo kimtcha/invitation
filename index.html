@@ -1046,7 +1046,8 @@
     }
 
     .rsvp-field input,
-    .rsvp-field select {
+    .rsvp-field select,
+    .rsvp-field textarea {
       width: 100%;
       height: 46px;
       border: 1px solid var(--beige-cold);
@@ -1059,7 +1060,8 @@
     }
 
     .rsvp-field input:focus,
-    .rsvp-field select:focus {
+    .rsvp-field select:focus,
+    .rsvp-field textarea:focus {
       border-color: rgba(27,42,74,0.5);
     }
 
@@ -1076,6 +1078,13 @@
     .rsvp-field select {
       appearance: none;
       cursor: pointer;
+    }
+
+    .rsvp-field textarea {
+      height: 86px;
+      padding: 12px 14px;
+      resize: vertical;
+      line-height: 1.45;
     }
 
     .rsvp-group {
@@ -1353,7 +1362,7 @@ PS : ou avec une petite friandise pour Timmy 🐶
 
           <div class="rsvp-field">
             <label for="rsvpNombre">Nombre de personnes</label>
-            <small class="rsvp-help">0 : Absent · Juste moi = préciser dans le formulaire qui · Moi et mon/ma compagne = le couple · +1 = +1 personne (enfant ou extra), etc.</small>
+            <small class="rsvp-help">Si vous venez seul avec un enfant ou un extra, vous pouvez nous informer dans la petite note.</small>
             <select id="rsvpNombre" name="nombre_personnes" required>
               <option value="0 : Absent">0 : Absent</option>
               <option value="Juste moi">Juste moi</option>
@@ -1369,6 +1378,11 @@ PS : ou avec une petite friandise pour Timmy 🐶
               <option value="+9">+9</option>
               <option value="+10">+10</option>
             </select>
+          </div>
+
+          <div class="rsvp-field">
+            <label for="rsvpNote">Vous voulez nous préciser quelque chose ?</label>
+            <textarea id="rsvpNote" name="note" placeholder="Écrivez votre message ici"></textarea>
           </div>
 
           <div class="rsvp-group-title">Confirmer votre présence à :</div>
@@ -1712,6 +1726,7 @@ PS : ou avec une petite friandise pour Timmy 🐶
     const nom = String(formData.get('nom') || '').trim();
     const prenom = String(formData.get('prenom') || '').trim();
     const nombrePersonnes = String(formData.get('nombre_personnes') || '').trim();
+    const note = String(formData.get('note') || '').trim();
     const ceremonie = String(formData.get('ceremonie') || 'Non');
     const diner = String(formData.get('diner') || 'Non');
 
@@ -1722,6 +1737,7 @@ PS : ou avec une petite friandise pour Timmy 🐶
       `Nom : ${nom}`,
       `Prénom : ${prenom}`,
       `Nombre de personnes : ${nombrePersonnes}`,
+      `Note : ${note || 'Aucune'}`,
       `Cérémonie : ${ceremonie}`,
       `Dîner : ${diner}`
     ].join('\n');
@@ -1736,6 +1752,7 @@ PS : ou avec une petite friandise pour Timmy 🐶
       nom: nom,
       prenom: prenom,
       nombre_personnes: nombrePersonnes,
+      note: note,
       ceremonie: ceremonie,
       diner: diner,
       subject: subject,
