@@ -1,0 +1,1469 @@
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Faire-part - Michaël & Julie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #1b2a4a;
+      --navy-mid:   #243358;
+      --navy-light: #2e4070;
+      --beige:      #f0ece6;
+      --beige-cold: #e8e4de;
+      --beige-warm: #ddd8d0;
+      --cream:      #f7f4f0;
+      --accent:     #1b2a4a;
+      --text-dark:  #1b2a4a;
+      --text-mid:   rgba(27,42,74,0.6);
+      --text-soft:  rgba(27,42,74,0.35);
+      --white:      #ffffff;
+      --radius:     16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; min-height: 100%;
+      background: #d8d3cc;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    body { display: grid; place-items: center; }
+
+    /* ── Frame ── */
+    .frame {
+      position: relative;
+      width: min(100vw, 420px);
+      min-height: 100svh;
+      background: #ffffff;
+      overflow: hidden;
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.22);
+    }
+
+    .screen {
+      position: relative;
+      min-height: 100svh;
+      width: 100%;
+    }
+
+    /* ENVELOPPE / COVER
+       First page only.
+    */
+    .cover {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: #ffffff;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      overflow: hidden;
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+      isolation: isolate;
+      transition: visibility 0s linear 1500ms;
+    }
+
+    .screen.open .cover {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: #ffffff;
+      pointer-events: none;
+    }
+
+    .door {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 10;
+      background: #ffffff;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      transition: transform 1180ms cubic-bezier(0.65, 0, 0.05, 1) 240ms, box-shadow 1180ms cubic-bezier(0.65, 0, 0.05, 1) 240ms;
+      overflow: hidden;
+      box-shadow: none;
+      will-change: transform;
+    }
+
+    .door.left {
+      left: 0;
+      transform-origin: left center;
+      border-right: none;
+    }
+
+    .door.right {
+      right: 0;
+      transform-origin: right center;
+      border-left: none;
+    }
+
+    .screen.open .door.left {
+      transform: rotateY(-82deg);
+      box-shadow: 18px 0 38px rgba(0,0,0,0.11);
+    }
+
+    .screen.open .door.right {
+      transform: rotateY(82deg);
+      box-shadow: -18px 0 38px rgba(0,0,0,0.11);
+    }
+
+    .cover-panel-art {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 200%;
+      height: 100%;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .door.left .cover-panel-art { left: 0; }
+    .door.right .cover-panel-art { right: 0; }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 0.5px;
+      z-index: 16;
+      background: rgba(27,42,74,0.075);
+      transform: translateX(-0.25px);
+      pointer-events: none;
+      transition: opacity 360ms ease 180ms;
+    }
+
+    .screen.open .cover::after { opacity: 0; }
+
+    .envelope-outline {
+      position: absolute;
+      inset: 24px 26px;
+      z-index: 8;
+      border: 1px solid rgba(27,42,74,0.82);
+      border-radius: 12px;
+      box-shadow: none;
+      pointer-events: none;
+      transition: opacity 420ms ease 100ms;
+    }
+
+    .screen.open .envelope-outline { opacity: 0; }
+
+    .folds,
+    .fold-left,
+    .fold-right {
+      display: none;
+    }
+
+    .cover-heading {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      top: 16.6%;
+      z-index: 18;
+      text-align: center;
+      color: var(--navy);
+      transition: opacity 320ms ease, transform 520ms ease;
+    }
+
+    .screen.open .cover-heading {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    .cover-kicker {
+      font-size: clamp(10px, 2.7vw, 12px);
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(27,42,74,0.88);
+      margin-bottom: clamp(40px, 8.8svh, 66px);
+    }
+
+    .cover-names {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(62px, 18vw, 86px);
+      font-weight: 400;
+      font-style: normal;
+      line-height: 0.92;
+      letter-spacing: -0.055em;
+      color: #102649;
+      margin: 0;
+    }
+
+    .cover-names span {
+      display: block;
+      margin: clamp(11px, 2.1svh, 18px) 0 clamp(13px, 2.5svh, 21px);
+      font-family: 'Playfair Display', serif;
+      font-size: 0.28em;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #102649;
+    }
+
+    .ribbon {
+      position: absolute;
+      left: -2px;
+      top: 61.9%;
+      width: calc(100% + 4px);
+      height: clamp(30px, 7.5vw, 34px);
+      transform: translateY(-50%);
+      z-index: 12;
+      background: #0c294d;
+      box-shadow: none;
+      opacity: 1;
+      transition: opacity 360ms ease, transform 560ms ease;
+    }
+
+    .ribbon::before,
+    .ribbon::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .ribbon::before { top: 4px; }
+    .ribbon::after { bottom: 4px; }
+
+    .screen.open .ribbon {
+      opacity: 0;
+      transform: translateY(-50%) scaleX(0.98);
+    }
+
+    .wedding-stamp-wrap {
+      position: absolute;
+      left: 50%;
+      top: 61.9%;
+      width: clamp(124px, 31vw, 138px);
+      height: clamp(124px, 31vw, 138px);
+      transform: translate(-50%, -50%);
+      z-index: 18;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: opacity 360ms ease, transform 560ms ease;
+    }
+
+    .screen.open .wedding-stamp-wrap {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.92);
+      pointer-events: none;
+    }
+
+
+    .full-stamp-overlay {
+      position: absolute;
+      left: 50%;
+      top: 61.9%;
+      width: clamp(124px, 31vw, 138px);
+      height: clamp(124px, 31vw, 138px);
+      transform: translate(-50%, -50%);
+      z-index: 26;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #ffffff;
+      pointer-events: none;
+      transition: opacity 360ms ease, transform 560ms ease;
+    }
+
+    .screen.open .full-stamp-overlay {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.92);
+    }
+
+    .screen.pressing .full-stamp-overlay {
+      animation: stamp-grow 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    @keyframes stamp-grow {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      38%  { transform: translate(-50%, -50%) scale(1.10); }
+      62%  { transform: translate(-50%, -50%) scale(0.96); }
+      100% { transform: translate(-50%, -50%) scale(1.03); }
+    }
+
+    .stamp-ring-text {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .stamp-ring-text text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.30em;
+      text-transform: uppercase;
+      fill: rgba(27,42,74,0.72);
+    }
+
+    .wedding-stamp {
+      position: relative;
+      width: clamp(88px, 22.5vw, 100px);
+      height: clamp(88px, 22.5vw, 100px);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #0c294d;
+      border: 1px solid rgba(255,255,255,0.96);
+      box-shadow: 0 0 0 8px #ffffff;
+    }
+
+    .wedding-stamp::before {
+      content: '';
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.82);
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .wedding-stamp::after {
+      content: '';
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      border: none;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .stamp-monogram {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .stamp-mj {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 8.6vw, 38px);
+      font-weight: 400;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: -0.075em;
+      color: #ffffff;
+      text-shadow: none;
+      transform: translateX(-1px);
+      white-space: nowrap;
+    }
+
+    .stamp-mj span {
+      display: inline-block;
+    }
+
+    .stamp-mj .amp {
+      font-size: 0.42em;
+      font-style: normal;
+      letter-spacing: 0;
+      margin: 0 3px 0 7px;
+      color: rgba(255,255,255,0.92);
+      transform: translateY(-5px);
+      text-shadow: none;
+    }
+
+    .cover-footer {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: 6.4%;
+      z-index: 18;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      color: var(--navy);
+      transition: opacity 320ms ease, transform 520ms ease;
+      pointer-events: none;
+    }
+
+    .screen.open .cover-footer {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .cover-date {
+      font-size: clamp(12px, 3.1vw, 14px);
+      font-weight: 400;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: #102649;
+    }
+
+    .tap-cue {
+      display: none;
+    }
+
+    .screen.open .door .envelope-outline,
+    .screen.open .door .cover-heading,
+    .screen.open .door .ribbon,
+    .screen.open .door .wedding-stamp-wrap,
+    .screen.open .door .cover-footer {
+      opacity: 1;
+    }
+
+    .screen.open .door .cover-heading,
+    .screen.open .door .cover-footer {
+      transform: none;
+    }
+
+    .screen.open .door .ribbon {
+      transform: translateY(-50%);
+    }
+
+    .screen.open .door .wedding-stamp-wrap {
+      transform: translate(-50%, -50%);
+    }
+
+    /* ─────────────────────────────────────────
+       INVITATION PAGE
+    ───────────────────────────────────────── */
+    .invitation {
+      position: absolute;
+      inset: 0;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background: var(--beige);
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .screen.open .invitation {
+      opacity: 1;
+      pointer-events: auto;
+      animation: page-in 900ms 1100ms both cubic-bezier(0.4,0,0.2,1);
+    }
+
+    @keyframes page-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Hero */
+    .hero {
+      padding: 56px 32px 40px;
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Subtle dot grid on hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(240,236,230,0.45);
+      margin: 0 0 24px;
+      opacity: 0;
+      animation: s-up 500ms 1200ms both;
+    }
+
+    .hero-names {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(44px, 13vw, 64px);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--beige);
+      margin: 0 0 28px;
+      opacity: 0;
+      animation: s-up 600ms 1280ms both;
+    }
+
+    .hero-names em {
+      display: block;
+      font-style: normal;
+      font-size: 0.42em;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: rgba(240,236,230,0.45);
+      margin: 10px 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .hero-date-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: s-up 500ms 1380ms both;
+    }
+
+    .hero-date {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: rgba(240,236,230,0.65);
+    }
+
+    .hero-rule {
+      flex: 1;
+      height: 1px;
+      background: rgba(240,236,230,0.12);
+    }
+
+    /* Body */
+    .body {
+      padding: 32px 24px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 22px 22px;
+      opacity: 0;
+      animation: s-up 500ms both;
+    }
+
+    .guest-attention {
+      margin: 2px 0 18px;
+      padding: 0 22px;
+      opacity: 0;
+      animation: s-up 500ms 1420ms both;
+    }
+
+    .guest-attention-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .guest-attention-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 7vw, 30px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+    }
+
+    .card-delay-1 { animation-delay: 1480ms; }
+    .card-delay-2 { animation-delay: 1560ms; }
+    .card-delay-3 { animation-delay: 1640ms; }
+    .card-delay-4 { animation-delay: 1720ms; }
+
+    .card-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 14px;
+    }
+
+    /* Date+time card */
+    .datetime-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .dt-big {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 400;
+      color: var(--navy);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .dt-sub {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .dt-time {
+      text-align: right;
+    }
+
+    .dt-time-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: var(--beige-cold);
+      margin: 16px 0;
+    }
+
+    .location-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+
+    .location-addr {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    /* Program card */
+    .program-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .prog-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .prog-time {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--navy);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      padding-top: 1px;
+      min-width: 50px;
+    }
+
+    .prog-dot-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .prog-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--navy);
+      background: var(--beige);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .prog-dot.filled { background: var(--navy); }
+
+    .prog-line {
+      flex: 1;
+      width: 1px;
+      background: var(--beige-cold);
+      min-height: 20px;
+      margin-top: 4px;
+    }
+
+    .prog-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .prog-note {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-mid);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    /* Note card */
+    .note-text {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--text-mid);
+    }
+
+    /* Actions */
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      opacity: 0;
+      animation: s-up 500ms 1800ms both;
+    }
+
+    .act {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      padding: 0;
+    }
+
+    .act-icon {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      background: var(--navy);
+      display: grid;
+      place-items: center;
+      transition: opacity 200ms ease, transform 200ms ease;
+      box-shadow: 0 4px 16px rgba(27,42,74,0.18);
+    }
+
+    .act:active .act-icon { transform: scale(0.94); opacity: 0.85; }
+
+    .act-icon svg {
+      width: 24px; height: 24px;
+      stroke: rgba(240,236,230,0.85);
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .act-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* RSVP popup */
+    .rsvp-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 90;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(16,38,73,0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+
+    .rsvp-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .rsvp-modal[hidden] { display: none; }
+
+    .rsvp-box {
+      width: 100%;
+      max-width: 360px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.22);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 260ms ease;
+    }
+
+    .rsvp-modal.active .rsvp-box {
+      transform: none;
+    }
+
+    .rsvp-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .rsvp-title {
+      margin: 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .rsvp-close {
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 50%;
+      background: var(--beige);
+      color: var(--navy);
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .rsvp-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .rsvp-field label,
+    .rsvp-group-title {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+    }
+
+    .rsvp-field input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--beige-cold);
+      border-radius: 12px;
+      padding: 0 14px;
+      font: inherit;
+      color: var(--navy);
+      background: #fbfaf8;
+      outline: none;
+    }
+
+    .rsvp-field input:focus {
+      border-color: rgba(27,42,74,0.5);
+    }
+
+    .rsvp-group {
+      border: 1px solid var(--beige-cold);
+      border-radius: 14px;
+      padding: 13px 14px 14px;
+      margin: 0;
+    }
+
+    .rsvp-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .rsvp-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .rsvp-option span {
+      display: grid;
+      place-items: center;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--beige);
+      color: var(--text-mid);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .rsvp-option input:checked + span {
+      background: var(--navy);
+      color: var(--beige);
+    }
+
+    .rsvp-submit {
+      height: 48px;
+      border: none;
+      border-radius: 14px;
+      background: var(--navy);
+      color: var(--beige);
+      font: inherit;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .rsvp-submit:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .rsvp-note {
+      margin: 2px 0 0;
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.45;
+      color: var(--text-mid);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 12px 24px 28px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      opacity: 0;
+      animation: s-up 400ms 1900ms both;
+    }
+
+    @keyframes s-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── Responsive ── */
+    @media (min-width: 520px) {
+      body { padding: 28px 0; }
+      .frame { min-height: 860px; border-radius: 28px; }
+      .screen, .invitation { min-height: 860px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<main class="frame">
+  <section class="screen" id="screen">
+
+    <!-- INVITATION -->
+    <div class="invitation" aria-hidden="true">
+
+      <div class="hero">
+        <p class="hero-eyebrow">Faire-part de mariage</p>
+        <h1 class="hero-names">
+          Michaël
+          <em>&amp;</em>
+          Julie
+        </h1>
+        <div class="hero-date-row">
+          <span class="hero-date">Vendredi 12 Septembre 2025</span>
+          <div class="hero-rule"></div>
+        </div>
+      </div>
+
+      <div class="body">
+
+        <div class="guest-attention" id="guestAttention">
+          <div class="guest-attention-label">À l’attention de</div>
+          <div class="guest-attention-name" id="guestNameText">Prénom Nom</div>
+        </div>
+
+        <!-- Date & lieu -->
+        <div class="card card-delay-1">
+          <div class="card-label">Quand &amp; Où</div>
+          <div class="datetime-row">
+            <div>
+              <div class="dt-big">12.09</div>
+              <div class="dt-sub">Samedi · 2025</div>
+            </div>
+            <div class="dt-time">
+              <div class="dt-time-val">15h00</div>
+              <div class="dt-sub">Cérémonie</div>
+            </div>
+          </div>
+          <div class="card-divider"></div>
+          <div class="location-name">Lieu de la cérémonie</div>
+          <div class="location-addr">1 Pl. du 27 Mars 2002<br>92 000 Nanterre, France</div>
+        </div>
+
+        <!-- Programme -->
+        <div class="card card-delay-2">
+          <div class="card-label">Programme</div>
+          <div class="program-list">
+
+            <div class="prog-item">
+              <div class="prog-time">14h30</div>
+              <div class="prog-dot-col">
+                <div class="prog-dot filled"></div>
+                <div class="prog-line"></div>
+              </div>
+              <div>
+                <div class="prog-label">Accueil des invités</div>
+                <div class="prog-note">Cocktail de bienvenue</div>
+              </div>
+            </div>
+
+            <div class="prog-item">
+              <div class="prog-time">15h00</div>
+              <div class="prog-dot-col">
+                <div class="prog-dot filled"></div>
+                <div class="prog-line"></div>
+              </div>
+              <div>
+                <div class="prog-label">Cérémonie</div>
+                <div class="prog-note">Célébration de l'union</div>
+              </div>
+            </div>
+
+            <div class="prog-item">
+              <div class="prog-time">16h00</div>
+              <div class="prog-dot-col">
+                <div class="prog-dot filled"></div>
+                <div class="prog-line"></div>
+              </div>
+              <div>
+                <div class="prog-label">Photos &amp; Promenade</div>
+                <div class="prog-note">Séance souvenir</div>
+              </div>
+            </div>
+
+            <div class="prog-item">
+              <div class="prog-time">17h00</div>
+              <div class="prog-dot-col">
+                <div class="prog-dot"></div>
+              </div>
+              <div>
+                <div class="prog-label">Banquet &amp; Soirée</div>
+                <div class="prog-note">Dîner, musique &amp; danse</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="card card-delay-3">
+          <div class="card-label">À noter</div>
+          <p class="note-text">
+            Le repas et la célébration ne se poursuivront pas au même endroit. Votre présence est notre plus beau cadeau.
+          </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <a class="act" href="https://www.google.com/maps/search/?api=1&amp;query=1%20Pl.%20du%2027%20Mars%202002%2C%2092000%20Nanterre%2C%20France" target="_blank" rel="noopener">
+            <div class="act-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21c0 0-7-6.8-7-11.5a7 7 0 0 1 14 0C19 14.2 12 21 12 21z"/>
+                <circle cx="12" cy="9.5" r="2.5"/>
+              </svg>
+            </div>
+            <span class="act-label">Lieu</span>
+          </a>
+
+          <button class="act" type="button" id="confirmBtn">
+            <div class="act-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="17" rx="3"/>
+                <path d="M8 2v4M16 2v4M3 10h18"/>
+                <path d="M8 14.5l2.3 2.3L16 10"/>
+              </svg>
+            </div>
+            <span class="act-label">Confirmer</span>
+          </button>
+
+          <button class="act" type="button" id="calendarBtn">
+            <div class="act-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="17" rx="3"/>
+                <path d="M8 2v4M16 2v4M3 10h18"/>
+                <path d="M12 13v5M9.5 15.5h5"/>
+              </svg>
+            </div>
+            <span class="act-label">Ajouter à mon calendrier</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="footer">12 · 09 · 2025 &nbsp;·&nbsp; France</div>
+
+    </div>
+
+    <!-- RSVP POPUP -->
+    <div class="rsvp-modal" id="rsvpModal" hidden aria-hidden="true">
+      <div class="rsvp-box" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
+        <div class="rsvp-head">
+          <h2 class="rsvp-title" id="rsvpTitle">Confirmer</h2>
+          <button class="rsvp-close" type="button" id="rsvpClose" aria-label="Fermer">×</button>
+        </div>
+
+        <form class="rsvp-form" id="rsvpForm">
+          <div class="rsvp-field">
+            <label for="rsvpNom">Nom</label>
+            <input id="rsvpNom" name="nom" type="text" placeholder="Remplir" autocomplete="family-name" required>
+          </div>
+
+          <div class="rsvp-field">
+            <label for="rsvpPrenom">Prénom</label>
+            <input id="rsvpPrenom" name="prenom" type="text" placeholder="Remplir" autocomplete="given-name" required>
+          </div>
+
+          <div class="rsvp-group-title">Confirmer votre présence à :</div>
+
+          <fieldset class="rsvp-group">
+            <legend class="rsvp-group-title">Cérémonie</legend>
+            <div class="rsvp-options">
+              <label class="rsvp-option">
+                <input type="radio" name="ceremonie" value="Oui" checked>
+                <span>Oui</span>
+              </label>
+              <label class="rsvp-option">
+                <input type="radio" name="ceremonie" value="Non">
+                <span>Non</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="rsvp-group">
+            <legend class="rsvp-group-title">Dîner</legend>
+            <div class="rsvp-options">
+              <label class="rsvp-option">
+                <input type="radio" name="diner" value="Oui" checked>
+                <span>Oui</span>
+              </label>
+              <label class="rsvp-option">
+                <input type="radio" name="diner" value="Non">
+                <span>Non</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <button class="rsvp-submit" type="submit">Envoyer la réponse</button>
+          <p class="rsvp-note">Votre réponse sera envoyée automatiquement par e-mail.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- COVER -->
+    <button class="cover" id="cover" type="button" aria-label="Ouvrir le faire-part">
+      <div class="cover-bg"></div>
+
+      <div class="door left" aria-hidden="true">
+      <div class="cover-panel-art">
+        <div class="envelope-outline"></div>
+        <div class="folds"></div>
+        <div class="fold-left"></div>
+        <div class="fold-right"></div>
+
+        <div class="cover-heading" aria-hidden="true">
+          <div class="cover-kicker">Faire-part de mariage</div>
+          <h1 class="cover-names">Michaël<span>&amp;</span>Julie</h1>
+        </div>
+
+        <div class="ribbon"></div>
+
+        <div class="wedding-stamp-wrap" aria-hidden="true">
+          <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
+            <defs>
+              <path id="tap-circle-top-l" d="M 21 70 A 49 49 0 0 1 119 70"/>
+              <path id="tap-circle-bottom-l" d="M 119 70 A 49 49 0 0 1 21 70"/>
+            </defs>
+            <text><textPath href="#tap-circle-top-l" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+            <text><textPath href="#tap-circle-bottom-l" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+          </svg>
+          <div class="wedding-stamp">
+            <div class="stamp-monogram">
+              <div class="stamp-mj">
+                <span>M</span><span class="amp">&amp;</span><span>J</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cover-footer" aria-hidden="true">
+          <div class="cover-date">12 · 09 · 2025</div>
+          <div class="tap-cue">
+            <div class="tap-cue-text">Appuyer pour ouvrir</div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="door right" aria-hidden="true">
+      <div class="cover-panel-art">
+        <div class="envelope-outline"></div>
+        <div class="folds"></div>
+        <div class="fold-left"></div>
+        <div class="fold-right"></div>
+
+        <div class="cover-heading" aria-hidden="true">
+          <div class="cover-kicker">Faire-part de mariage</div>
+          <h1 class="cover-names">Michaël<span>&amp;</span>Julie</h1>
+        </div>
+
+        <div class="ribbon"></div>
+
+        <div class="wedding-stamp-wrap" aria-hidden="true">
+          <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
+            <defs>
+              <path id="tap-circle-top-r" d="M 21 70 A 49 49 0 0 1 119 70"/>
+              <path id="tap-circle-bottom-r" d="M 119 70 A 49 49 0 0 1 21 70"/>
+            </defs>
+            <text><textPath href="#tap-circle-top-r" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+            <text><textPath href="#tap-circle-bottom-r" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+          </svg>
+          <div class="wedding-stamp">
+            <div class="stamp-monogram">
+              <div class="stamp-mj">
+                <span>M</span><span class="amp">&amp;</span><span>J</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cover-footer" aria-hidden="true">
+          <div class="cover-date">12 · 09 · 2025</div>
+          <div class="tap-cue">
+            <div class="tap-cue-text">Appuyer pour ouvrir</div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="full-stamp-overlay" aria-hidden="true">
+        <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
+          <defs>
+            <path id="tap-circle-top-full" d="M 21 70 A 49 49 0 0 1 119 70"/>
+            <path id="tap-circle-bottom-full" d="M 119 70 A 49 49 0 0 1 21 70"/>
+          </defs>
+          <text><textPath href="#tap-circle-top-full" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+          <text><textPath href="#tap-circle-bottom-full" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
+        </svg>
+        <div class="wedding-stamp">
+          <div class="stamp-monogram">
+            <div class="stamp-mj">
+              <span>M</span><span class="amp">&amp;</span><span>J</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </button>
+
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+  const EMAILJS_SERVICE_ID = 'service_fni5wum';
+  const EMAILJS_TEMPLATE_ID = 'template_34gxgyf';
+  const EMAILJS_PUBLIC_KEY = 'AKh5p4WjsFDvVyOI7';
+
+  if (window.emailjs) {
+    emailjs.init({
+      publicKey: EMAILJS_PUBLIC_KEY
+    });
+  }
+
+  const screen = document.getElementById('screen');
+  const cover  = document.getElementById('cover');
+  const invitation = document.querySelector('.invitation');
+
+  const confirmBtn = document.getElementById('confirmBtn');
+  const calendarBtn = document.getElementById('calendarBtn');
+  const rsvpModal = document.getElementById('rsvpModal');
+  const rsvpClose = document.getElementById('rsvpClose');
+  const rsvpForm = document.getElementById('rsvpForm');
+
+  const rsvpRecipients = 'amouzegarjulei@gmail.com,michael.tcha@gmail.com';
+  const weddingAddress = '1 Pl. du 27 Mars 2002, 92000 Nanterre, France';
+
+  const params = new URLSearchParams(window.location.search);
+  const guestName = String(params.get('name') || '').trim();
+  const guestNameText = document.getElementById('guestNameText');
+
+  if (guestNameText && guestName) {
+    guestNameText.textContent = guestName;
+  }
+
+  let opened = false;
+
+  function openInvitation() {
+    if (opened) return;
+    opened = true;
+
+    screen.classList.add('pressing');
+
+    setTimeout(() => {
+      screen.classList.add('open');
+    }, 460);
+
+    setTimeout(() => {
+      invitation.setAttribute('aria-hidden', 'false');
+      cover.setAttribute('aria-hidden', 'true');
+      cover.tabIndex = -1;
+      screen.classList.remove('pressing');
+    }, 1710);
+  }
+
+  function openRsvpModal() {
+    rsvpModal.hidden = false;
+    requestAnimationFrame(() => {
+      rsvpModal.classList.add('active');
+      rsvpModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('rsvpNom').focus();
+    });
+  }
+
+  function closeRsvpModal() {
+    rsvpModal.classList.remove('active');
+    rsvpModal.setAttribute('aria-hidden', 'true');
+    setTimeout(() => { rsvpModal.hidden = true; }, 260);
+  }
+
+  function addToNativeCalendar() {
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Michael et Julie//Faire-part//FR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:michael-julie-mariage-20250912T150000@fairepart',
+      'DTSTAMP:20250602T120000Z',
+      'DTSTART:20250912T130000Z',
+      'DTEND:20250912T140000Z',
+      'SUMMARY:Mariage Michaël & Julie',
+      'LOCATION:' + weddingAddress,
+      'DESCRIPTION:Cérémonie de mariage de Michaël et Julie.',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'mariage-michael-julie.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  cover.addEventListener('click', openInvitation);
+
+  cover.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openInvitation();
+    }
+  });
+
+  confirmBtn.addEventListener('click', openRsvpModal);
+  calendarBtn.addEventListener('click', addToNativeCalendar);
+
+  rsvpClose.addEventListener('click', closeRsvpModal);
+
+  rsvpModal.addEventListener('click', e => {
+    if (e.target === rsvpModal) closeRsvpModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !rsvpModal.hidden) closeRsvpModal();
+  });
+
+  rsvpForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (!window.emailjs) {
+      alert("EmailJS n'est pas chargé. Teste le fichier avec une connexion internet ou héberge-le sur ton site.");
+      return;
+    }
+
+    const formData = new FormData(rsvpForm);
+    const nom = String(formData.get('nom') || '').trim();
+    const prenom = String(formData.get('prenom') || '').trim();
+    const ceremonie = String(formData.get('ceremonie') || 'Non');
+    const diner = String(formData.get('diner') || 'Non');
+
+    const subject = `Confirmation présence - ${prenom} ${nom}`;
+    const message = [
+      'Nouvelle confirmation de présence',
+      '',
+      `Nom : ${nom}`,
+      `Prénom : ${prenom}`,
+      `Cérémonie : ${ceremonie}`,
+      `Dîner : ${diner}`
+    ].join('\n');
+
+    const submitButton = rsvpForm.querySelector('.rsvp-submit');
+    const originalButtonText = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Envoi...';
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      nom: nom,
+      prenom: prenom,
+      ceremonie: ceremonie,
+      diner: diner,
+      subject: subject,
+      message: message,
+      to_email: rsvpRecipients,
+      from_name: `${prenom} ${nom}`
+    }).then(() => {
+      alert('Merci, votre réponse a bien été envoyée.');
+      rsvpForm.reset();
+      closeRsvpModal();
+    }).catch(error => {
+      console.error('Erreur EmailJS :', error);
+      const errorText = error && (error.text || error.message) ? (error.text || error.message) : 'Erreur inconnue';
+      alert("L'envoi n'a pas fonctionné. Vérifie EmailJS > Email History / Logs. Détail : " + errorText);
+    }).finally(() => {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    });
+  });
+</script>
+</body>
+</html>
