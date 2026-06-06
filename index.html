@@ -312,15 +312,25 @@
       height: 100%;
       overflow: visible;
       pointer-events: none;
+      z-index: 2;
+      transform-origin: 50% 50%;
+      transform-box: fill-box;
+      animation: stamp-ring-spin 10.5s linear infinite;
+      will-change: transform;
     }
 
     .stamp-ring-text text {
       font-family: 'DM Sans', sans-serif;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.30em;
+      font-size: 7.7px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      fill: rgba(27,42,74,0.72);
+      fill: rgba(27,42,74,0.82);
+    }
+
+    @keyframes stamp-ring-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     .wedding-stamp {
@@ -1343,7 +1353,7 @@ Merci de venir 10 minutes en avance.</div>
           <div class="card-label">Thème</div>
           <p class="note-text">
         
-           Le programme sera mis à jour prochainement et communiqué aux personnes présentes toute la journée.<br><br>Tenue suggérée : bleu marine et blanc. <br><br> Sinon, venez simplement avec votre bonne humeur ❤️ 
+           Le programme complet sera mis à jour prochainement et communiqué.<br><br>Tenue suggérée : bleu marine et blanc. <br><br> Sinon, venez simplement avec votre bonne humeur ❤️ 
 
           </p>
         </div>
@@ -1494,8 +1504,8 @@ Merci de venir 10 minutes en avance.</div>
         <div class="wedding-stamp-wrap" aria-hidden="true">
           <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
             <defs>
-              <path id="tap-circle-top-l" d="M 21 70 A 49 49 0 0 1 119 70"/>
-              <path id="tap-circle-bottom-l" d="M 119 70 A 49 49 0 0 1 21 70"/>
+              <path id="tap-circle-top-l" d="M 10 70 A 60 60 0 0 1 130 70"/>
+              <path id="tap-circle-bottom-l" d="M 130 70 A 60 60 0 0 1 10 70"/>
             </defs>
             <text><textPath href="#tap-circle-top-l" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
             <text><textPath href="#tap-circle-bottom-l" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
@@ -1534,8 +1544,8 @@ Merci de venir 10 minutes en avance.</div>
         <div class="wedding-stamp-wrap" aria-hidden="true">
           <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
             <defs>
-              <path id="tap-circle-top-r" d="M 21 70 A 49 49 0 0 1 119 70"/>
-              <path id="tap-circle-bottom-r" d="M 119 70 A 49 49 0 0 1 21 70"/>
+              <path id="tap-circle-top-r" d="M 10 70 A 60 60 0 0 1 130 70"/>
+              <path id="tap-circle-bottom-r" d="M 130 70 A 60 60 0 0 1 10 70"/>
             </defs>
             <text><textPath href="#tap-circle-top-r" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
             <text><textPath href="#tap-circle-bottom-r" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
@@ -1561,8 +1571,8 @@ Merci de venir 10 minutes en avance.</div>
       <div class="full-stamp-overlay" aria-hidden="true">
         <svg class="stamp-ring-text" viewBox="0 0 140 140" aria-hidden="true">
           <defs>
-            <path id="tap-circle-top-full" d="M 21 70 A 49 49 0 0 1 119 70"/>
-            <path id="tap-circle-bottom-full" d="M 119 70 A 49 49 0 0 1 21 70"/>
+            <path id="tap-circle-top-full" d="M 10 70 A 60 60 0 0 1 130 70"/>
+            <path id="tap-circle-bottom-full" d="M 130 70 A 60 60 0 0 1 10 70"/>
           </defs>
           <text><textPath href="#tap-circle-top-full" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
           <text><textPath href="#tap-circle-bottom-full" startOffset="50%" text-anchor="middle">• APPUYER POUR OUVRIR •</textPath></text>
