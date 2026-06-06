@@ -611,6 +611,32 @@
       transform: scale(0.96);
     }
 
+    .intro-skip-btn {
+      position: absolute;
+      left: 50%;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 3;
+      transform: translateX(-50%);
+      border: 1px solid rgba(247,244,240,0.38);
+      border-radius: 999px;
+      background: rgba(247,244,240,0.08);
+      color: rgba(247,244,240,0.72);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms ease;
+    }
+
+    .intro-skip-btn:active {
+      transform: translateX(-50%) scale(0.96);
+    }
+
     @keyframes ink-float {
       0%   { transform: scale(1) rotate(0deg) translate3d(-2%, -1%, 0); }
       45%  { transform: scale(1.12) rotate(8deg) translate3d(3%, 2%, 0); }
@@ -1272,6 +1298,7 @@
         <div class="intro-signature" id="introSignature">Michaël &amp; Julie Tcha Amouzegar Kim</div>
         <button class="intro-see-btn" id="introSeeBtn" type="button">Voir</button>
       </div>
+      <button class="intro-skip-btn" id="introSkipBtn" type="button">Passer</button>
     </div>
 
     <!-- INVITATION -->
@@ -1353,7 +1380,7 @@ Merci de venir 10 minutes en avance.</div>
           <div class="card-label">Thème</div>
           <p class="note-text">
         
-           Le programme complet sera mis à jour prochainement et communiqué.<br><br>Tenue suggérée : bleu marine et blanc. <br><br> Sinon, venez simplement avec votre bonne humeur ❤️ 
+           Le programme sera mis à jour prochainement et communiqué aux personnes présentes toute la journée.<br><br>Tenue suggérée : bleu marine et blanc. <br><br> Sinon, venez simplement avec votre bonne humeur ❤️ 
 
           </p>
         </div>
@@ -1611,6 +1638,7 @@ Merci de venir 10 minutes en avance.</div>
   const introText = document.getElementById('introText');
   const introSignature = document.getElementById('introSignature');
   const introSeeBtn = document.getElementById('introSeeBtn');
+  const introSkipBtn = document.getElementById('introSkipBtn');
 
   const confirmBtn = document.getElementById('confirmBtn');
   const calendarBtn = document.getElementById('calendarBtn');
@@ -1678,15 +1706,22 @@ Merci de venir 10 minutes en avance.</div>
     window.setTimeout(typeNextCharacter, 850);
   }
 
-  if (introSeeBtn && introScreen) {
-    introSeeBtn.addEventListener('click', () => {
-      introScreen.classList.add('intro-hide');
-      window.setTimeout(() => {
-        introScreen.hidden = true;
-        introScreen.setAttribute('aria-hidden', 'true');
-        cover.focus();
-      }, 920);
-    });
+  function hideIntroScreen() {
+    if (!introScreen) return;
+    introScreen.classList.add('intro-hide');
+    window.setTimeout(() => {
+      introScreen.hidden = true;
+      introScreen.setAttribute('aria-hidden', 'true');
+      cover.focus();
+    }, 920);
+  }
+
+  if (introSeeBtn) {
+    introSeeBtn.addEventListener('click', hideIntroScreen);
+  }
+
+  if (introSkipBtn) {
+    introSkipBtn.addEventListener('click', hideIntroScreen);
   }
 
   startIntroTyping();
