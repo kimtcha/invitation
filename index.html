@@ -900,6 +900,38 @@
       line-height: 1.4;
     }
 
+    .prog-waiting {
+      display: inline-block;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-mid);
+      animation: waiting-flash 2.4s ease-in-out infinite;
+    }
+
+    .prog-dot-waiting {
+      background: var(--beige);
+      border-color: var(--navy);
+      animation: waiting-dot-blink 2.4s ease-in-out infinite;
+    }
+
+    @keyframes waiting-dot-blink {
+      0%, 100% {
+        background-color: var(--beige);
+        border-color: var(--navy);
+        box-shadow: 0 0 0 0 rgba(27,42,74,0);
+      }
+      50% {
+        background-color: var(--navy);
+        border-color: var(--navy);
+        box-shadow: 0 0 0 4px rgba(27,42,74,0.08);
+      }
+    }
+
+    @keyframes waiting-flash {
+      0%, 100% { opacity: 0.38; }
+      50%      { opacity: 1; }
+    }
+
     /* Note card */
     .note-text {
       font-size: 13px;
@@ -1182,6 +1214,20 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    .prog-dot-waiting {
+      animation-name: waiting-dot-blink !important;
+      animation-duration: 2.4s !important;
+      animation-timing-function: ease-in-out !important;
+      animation-iteration-count: infinite !important;
+    }
+
+    .prog-waiting {
+      animation-name: waiting-flash !important;
+      animation-duration: 2.4s !important;
+      animation-timing-function: ease-in-out !important;
+      animation-iteration-count: infinite !important;
+    }
   </style>
 </head>
 <body>
@@ -1258,6 +1304,16 @@ Merci de venir 10 minutes en avance.</div>
               </div>
             </div>
 
+            <div class="prog-item">
+              <div class="prog-time"></div>
+              <div class="prog-dot-col">
+                <div class="prog-dot prog-dot-waiting"></div>
+              </div>
+              <div>
+                <div class="prog-label prog-waiting">La suite vous sera communiquée rapidement</div>
+              </div>
+            </div>
+
       
 
           </div>
@@ -1275,7 +1331,7 @@ Merci de venir 10 minutes en avance.</div>
 
         <!-- Actions -->
         <div class="actions">
-          <a class="act" href="https://www.google.com/maps/search/?api=1&amp;query=1%20Pl.%20du%2027%20Mars%202002%2C%2092000%20Nanterre%2C%20France" target="_blank" rel="noopener">
+          <a class="act" id="mapsBtn" href="https://maps.app.goo.gl/2FM7v9fQGpBe7ptMA" target="_blank" rel="noopener">
             <div class="act-icon">
               <svg viewBox="0 0 24 24">
                 <path d="M12 21c0 0-7-6.8-7-11.5a7 7 0 0 1 14 0C19 14.2 12 21 12 21z"/>
@@ -1525,12 +1581,14 @@ Merci de venir 10 minutes en avance.</div>
 
   const confirmBtn = document.getElementById('confirmBtn');
   const calendarBtn = document.getElementById('calendarBtn');
+  const mapsBtn = document.getElementById('mapsBtn');
   const rsvpModal = document.getElementById('rsvpModal');
   const rsvpClose = document.getElementById('rsvpClose');
   const rsvpForm = document.getElementById('rsvpForm');
 
   const rsvpRecipients = 'amouzegarjulei@gmail.com,michael.tcha@gmail.com';
-  const weddingAddress = '1 Pl. du 27 Mars 2002, 92000 Nanterre, France';
+  const hotelDeVilleMapsUrl = 'https://maps.app.goo.gl/2FM7v9fQGpBe7ptMA';
+  const weddingAddress = 'Hôtel de Ville de Nanterre, 1 Pl. du 27 Mars 2002, 92000 Nanterre, France';
 
   const params = new URLSearchParams(window.location.search);
   const guestName = String(params.get('name') || '').trim();
@@ -1663,6 +1721,15 @@ Merci de venir 10 minutes en avance.</div>
     link.click();
     document.body.removeChild(link);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+
+  if (mapsBtn) {
+    mapsBtn.href = hotelDeVilleMapsUrl;
+    mapsBtn.addEventListener('click', e => {
+      e.preventDefault();
+      window.open(hotelDeVilleMapsUrl, '_blank', 'noopener');
+    });
   }
 
   cover.addEventListener('click', openInvitation);
