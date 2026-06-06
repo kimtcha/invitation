@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -1249,6 +1250,101 @@
       font-weight: 300;
       line-height: 1.45;
       color: var(--text-mid);
+    }
+
+
+
+    /* FIX MOBILE RSVP : popup responsive et scrollable */
+    .rsvp-modal {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .rsvp-box {
+      width: min(100%, 360px);
+      max-height: calc(100svh - 28px);
+      max-height: calc(100dvh - 28px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: auto 0;
+    }
+
+    @media (max-width: 420px), (max-height: 760px) {
+      .rsvp-modal {
+        padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom));
+      }
+
+      .rsvp-box {
+        max-height: calc(100svh - 20px);
+        max-height: calc(100dvh - 20px);
+        border-radius: 18px;
+        padding: 16px;
+      }
+
+      .rsvp-head {
+        margin-bottom: 12px;
+      }
+
+      .rsvp-title {
+        font-size: 24px;
+      }
+
+      .rsvp-close {
+        width: 32px;
+        height: 32px;
+      }
+
+      .rsvp-form {
+        gap: 10px;
+      }
+
+      .rsvp-field label,
+      .rsvp-group-title {
+        margin-bottom: 5px;
+        font-size: 9px;
+        letter-spacing: 0.15em;
+      }
+
+      .rsvp-field input,
+      .rsvp-field select,
+      .rsvp-field textarea {
+        height: 42px;
+        border-radius: 11px;
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 16px;
+      }
+
+      .rsvp-field textarea {
+        height: 68px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      .rsvp-help {
+        margin-bottom: 5px;
+        font-size: 10px;
+        line-height: 1.25;
+      }
+
+      .rsvp-group {
+        padding: 10px 11px 11px;
+        border-radius: 12px;
+      }
+
+      .rsvp-option span {
+        height: 34px;
+      }
+
+      .rsvp-submit {
+        height: 44px;
+        border-radius: 12px;
+      }
     }
 
     /* Footer */
